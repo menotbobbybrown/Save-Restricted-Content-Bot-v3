@@ -6,7 +6,7 @@ from datetime import timedelta, datetime
 from shared_client import client as bot_client
 from telethon import events
 from utils.func import get_premium_details, is_private_chat, get_display_name, get_user_data, premium_users_collection, is_premium_user
-from config import OWNER_ID
+from config import OWNER_ID, BOT_STATS_NAME
 import logging
 logging.basicConfig(format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -42,6 +42,7 @@ async def stats_handler(event):
         premium_status = f"✅ Premium until {formatted_expiry} (IST)"
     
     await event.respond(
+        f"**📊 {BOT_STATS_NAME}**\n\n"
         "**Your current status:**\n\n"
         f"**Login Status:** {'✅ Active' if session_active else '❌ Inactive'}\n"
         f"**Premium:** {premium_status}"

@@ -29,18 +29,8 @@ codedb = db["redeem_code"]
 
 # ------- < start > Session Encoder don't change -------
 
-a1 = "save_restricted_content_bots"
-a2 = "796"
-a3 = "get_messages" 
-a4 = "reply_photo" 
-a5 = "start"
-attr1 = "photo"
-attr2 = "file_id"
-a7 = "Hi 👋 Welcome, Wanna intro...? \n\n✅ I can save posts from channels or groups where forwarding is off. I can download videos/audio from YT, INSTA, ... social platforms\n✅ Simply send the post link of a public channel. For private channels, do /login. Send /help to know more."
-a8 = "Join Channel"
-a9 = "Get Premium" 
-a10 = "https://t.me/your_channel_username" 
-a11 = "https://t.me/admin" 
+# These were used for branding/obfuscation and are being replaced/removed
+# Branding is now handled via config.py
 
 # ------- < end > Session Encoder don't change --------
 
@@ -306,7 +296,7 @@ async def add_premium_user(user_id, duration_value, duration_unit):
                 "subscription_start": now,
                 "subscription_end": expiry_date,
                 "expireAt": expiry_date,
-                "reminder_sent": False
+                "reminded_24h": False
             }},
             upsert=True
         )
@@ -392,10 +382,38 @@ async def extend_premium_user(user_id, duration_value, duration_unit):
             {"$set": {
                 "subscription_end": expiry_date,
                 "expireAt": expiry_date,
-                "reminder_sent": False
+                "reminded_24h": False
             }}
         )
         return True, expiry_date
     except Exception as e:
         logger.error(f"Error extending premium user {user_id}: {e}")
         return False, str(e)
+
+
+async def get_expiring_users():
+    try:
+        now = datetime.now()
+        start_threshold = now + timedelta(hours=24)
+        end_threshold = now + timedelta(hours=25)
+        
+        cursor = premium_users_collection.find({
+            "subscription_end": {
+                "$gte": start_threshold,
+                "$lte": end_threshold
+            },
+            "reminded_24h": {"$ne": True}
+        })
+        return await cursor.to_list(length=None)
+    except Exception as e:
+        logger.error(f"Error getting expiring users: {e}")
+        return []
+
+async def set_user_reminded(user_id):
+    try:
+        await premium_users_collection.update_one(
+            {"user_id": user_id},
+            {"$set": {"reminded_24h": True}}
+        )
+    except Exception as e:
+        logger.error(f"Error setting reminded flag for {user_id}: {e}")
