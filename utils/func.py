@@ -305,7 +305,8 @@ async def add_premium_user(user_id, duration_value, duration_unit):
                 "user_id": user_id,
                 "subscription_start": now,
                 "subscription_end": expiry_date,
-                "expireAt": expiry_date
+                "expireAt": expiry_date,
+                "reminder_sent": False
             }},
             upsert=True
         )
@@ -339,3 +340,11 @@ async def get_premium_details(user_id):
     except Exception as e:
         logger.error(f"Error getting premium details for {user_id}: {e}")
         return None
+
+async def get_all_premium_users():
+    try:
+        cursor = premium_users_collection.find({})
+        return await cursor.to_list(length=None)
+    except Exception as e:
+        logger.error(f"Error getting all premium users: {e}")
+        return []

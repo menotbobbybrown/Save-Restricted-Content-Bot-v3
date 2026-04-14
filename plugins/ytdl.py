@@ -27,7 +27,7 @@ from shared_client import client, app
 from telethon import events
 from telethon.sync import TelegramClient
 from telethon.tl.types import DocumentAttributeVideo
-from utils.func import get_video_metadata, screenshot
+from utils.func import get_video_metadata, screenshot, is_private_chat
 from telethon.tl.functions.messages import EditMessageRequest
 from devgagantools import fast_upload
 from concurrent.futures import ThreadPoolExecutor
@@ -166,6 +166,9 @@ async def process_audio(client, event, url, cookies_env_var=None):
  
 @client.on(events.NewMessage(pattern="/adl"))
 async def handler(event):
+    if not await is_private_chat(event):
+        await event.respond('This command can only be used in private chats for security reasons.')
+        return
     user_id = event.sender_id
     if user_id in ongoing_downloads:
         await event.reply("**You already have an ongoing download. Please wait until it completes!**")
@@ -217,6 +220,9 @@ def download_video(url, ydl_opts):
  
 @client.on(events.NewMessage(pattern="/dl"))
 async def handler(event):
+    if not await is_private_chat(event):
+        await event.respond('This command can only be used in private chats for security reasons.')
+        return
     user_id = event.sender_id
  
      
