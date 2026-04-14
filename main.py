@@ -3,13 +3,22 @@
 # See LICENSE file in the repository root for full license text.
 
 import asyncio
-from shared_client import start_client
+from shared_client import start_client, app as bot  # Pyrogram client for reminders
 import importlib
 import os
 import sys
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from utils.scheduler import renewal_reminder_job
 
 async def load_and_run_plugins():
     await start_client()
+    
+    # Initialize and start scheduler
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(renewal_reminder_job, 'interval', hours=1, args=[bot])
+    scheduler.start()
+    print("Scheduler started...")
+    
     plugin_dir = "plugins"
     plugins = [f[:-3] for f in os.listdir(plugin_dir) if f.endswith(".py") and f != "__init__.py"]
 

@@ -22,7 +22,7 @@ STEP_CODE = 2
 STEP_PASSWORD = 3
 login_cache = {}
 
-@bot.on_message(filters.command('login'))
+@bot.on_message(filters.command('login') & filters.private)
 async def login_command(client, message):
     user_id = message.from_user.id
     set_user_step(user_id, STEP_PHONE)
@@ -35,7 +35,7 @@ Example: `+12345678900`"""
     login_cache[user_id] = {'status_msg': status_msg}
     
     
-@bot.on_message(filters.command("setbot"))
+@bot.on_message(filters.command("setbot") & filters.private)
 async def set_bot_token(C, m):
     user_id = m.from_user.id
     args = m.text.split(" ", 1)
@@ -65,7 +65,7 @@ async def set_bot_token(C, m):
     await m.reply_text("✅ Bot token saved successfully.", quote=True)
     
     
-@bot.on_message(filters.command("rembot"))
+@bot.on_message(filters.command("rembot") & filters.private)
 async def rem_bot_token(C, m):
     user_id = m.from_user.id
     if user_id in UB:
@@ -95,7 +95,8 @@ async def rem_bot_token(C, m):
     
 @bot.on_message(login_in_progress & filters.text & filters.private & ~filters.command([
     'start', 'batch', 'cancel', 'login', 'logout', 'stop', 'set', 'pay',
-    'redeem', 'gencode', 'generate', 'keyinfo', 'encrypt', 'decrypt', 'keys', 'setbot', 'rembot']))
+    'redeem', 'gencode', 'generate', 'keyinfo', 'encrypt', 'decrypt', 'keys', 'setbot', 'rembot',
+    'add', 'rem', 'myplan', 'plans', 'getall']))
 async def handle_login_steps(client, message):
     user_id = message.from_user.id
     text = message.text.strip()
@@ -207,7 +208,7 @@ async def edit_message_safely(message, text):
     except Exception as e:
         logger.error(f'Error editing message: {e}')
         
-@bot.on_message(filters.command('cancel'))
+@bot.on_message(filters.command('cancel') & filters.private)
 async def cancel_command(client, message):
     user_id = message.from_user.id
     await message.delete()
@@ -228,7 +229,7 @@ async def cancel_command(client, message):
         temp_msg = await message.reply('No active login process to cancel.')
         await temp_msg.delete(5)
         
-@bot.on_message(filters.command('logout'))
+@bot.on_message(filters.command('logout') & filters.private)
 async def logout_command(client, message):
     user_id = message.from_user.id
     await message.delete()
