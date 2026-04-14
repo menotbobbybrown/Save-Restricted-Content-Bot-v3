@@ -5,7 +5,7 @@
 from shared_client import client as bot_client, app
 from telethon import events
 from datetime import datetime, timedelta
-from config import OWNER_ID, PREMIUM_LOGS, P0, JOIN_LINK as JL , ADMIN_CONTACT as AC, OWNER_USERNAME, BOT_NAME, START_PIC
+from config import OWNER_ID, PREMIUM_LOGS, P0, JOIN_LINK as JL, ADMIN_CONTACT as AC, OWNER_USERNAME, BOT_NAME, START_PIC, BRAND_NAME
 from utils.func import (
     add_premium_user, 
     is_private_chat, 
@@ -19,8 +19,6 @@ from utils.func import (
 )
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton as IK, InlineKeyboardMarkup as IKM
-import base64 as spy
-from utils.func import a1, a2, a3, a4, a5, a7, a8, a9, a10, a11
 from plugins.start import subscribe
 
 
@@ -299,18 +297,20 @@ async def start_handler(client, message):
     if subscription_status == 1:
         return
 
-    # Use variables from config or func
-    b6 = a7
-    b7 = a8
-    b8 = a9
+    start_text = (
+        f"Hi 👋 Welcome to **{BRAND_NAME}**\n\n"
+        "✅ I can save posts from channels or groups where forwarding is off. I can download videos/audio from YT, INSTA, and other social platforms.\n"
+        "✅ Simply send the post link of a public channel. For private channels, use /login.\n"
+        "✅ Send /help to know more about my features."
+    )
     
     kb = IKM([
-        [IK(b7, url=JL)],
-        [IK(b8, url=AC)]
+        [IK("Join Channel", url=JL)],
+        [IK("Get Premium", url=AC)]
     ])
 
     await message.reply_photo(
         photo=START_PIC,
-        caption=b6,
+        caption=start_text,
         reply_markup=kb
     )

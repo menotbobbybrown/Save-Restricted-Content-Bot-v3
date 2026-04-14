@@ -115,7 +115,7 @@ async def send_or_edit_help_page(_, message, page_number):
     )
  
  
-@app.on_message(filters.command("help"))
+@app.on_message(filters.command("help") & filters.private)
 async def help(client, message):
     join = await subscribe(client, message)
     if join == 1:

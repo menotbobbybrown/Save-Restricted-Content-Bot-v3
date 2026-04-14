@@ -53,6 +53,13 @@ BOT_NAME      = os.getenv("BOT_NAME", "Save Restricted Bot")
 OWNER_USERNAME = os.getenv("OWNER_USERNAME", "admin")
 START_PIC     = os.getenv("START_PIC", "https://graph.org/file/d44f024a08ded19452152.jpg")
 
+# ─── BRANDING SETTINGS ──────────────────────────────────────────────────────────
+BRAND_NAME    = os.getenv("BRAND_NAME", "Premium Bot")
+SUPPORT_CHAT  = os.getenv("SUPPORT_CHAT", "https://t.me/your_support_group")
+CHANNEL_LINK  = os.getenv("CHANNEL_LINK", "https://t.me/your_channel_username")
+GROUP_LINK    = os.getenv("GROUP_LINK", "https://t.me/your_support_group")
+BOT_STATS_NAME = os.getenv("BOT_STATS_NAME", "PremiumBotStats")
+
 # ════════════════════════════════════════════════════════════════════════════════
 # ░ PREMIUM PLANS CONFIGURATION
 # ════════════════════════════════════════════════════════════════════════════════
