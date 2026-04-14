@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.  
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.  
 # Licensed under the GNU General Public License v3.0.  
 # See LICENSE file in the repository root for full license text.
 
@@ -7,7 +7,7 @@ from pyrogram.types import Message
 from pyrogram.errors import BadRequest, SessionPasswordNeeded, PhoneCodeInvalid, PhoneCodeExpired, MessageNotModified
 import logging
 import os
-from config import API_HASH, API_ID
+from config import API_HASH, API_ID, BOT_NAME
 from shared_client import app as bot
 from utils.func import save_user_session, get_user_data, remove_user_session, save_user_bot, remove_user_bot
 from utils.encrypt import ecs, dcs
@@ -15,7 +15,7 @@ from plugins.batch import UB, UC
 from utils.custom_filters import login_in_progress, set_user_step, get_user_step
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-model = "v3saver Team SPY"
+model = f"{BOT_NAME} v3"
 
 STEP_PHONE = 1
 STEP_CODE = 2
@@ -96,7 +96,7 @@ async def rem_bot_token(C, m):
 @bot.on_message(login_in_progress & filters.text & filters.private & ~filters.command([
     'start', 'batch', 'cancel', 'login', 'logout', 'stop', 'set', 'pay',
     'redeem', 'gencode', 'generate', 'keyinfo', 'encrypt', 'decrypt', 'keys', 'setbot', 'rembot',
-    'add', 'rem', 'myplan', 'plans', 'getall']))
+    'add', 'revoke', 'extend', 'status', 'myplan', 'plans', 'getall', 'paid']))
 async def handle_login_steps(client, message):
     user_id = message.from_user.id
     text = message.text.strip()

@@ -2,10 +2,8 @@
 # File Name: ytdl.py (pure code)
 # Description: A Pyrogram bot for downloading yt and other sites videos from Telegram channels or groups 
 #              and uploading them back to Telegram.
-# Author: Gagan
-# GitHub: https://github.com/devgaganin/
-# Telegram: https://t.me/team_spy_pro
-# YouTube: https://youtube.com/@dev_gagan
+# Author: Contributor
+# GitHub: https://github.com/Contributor/
 # Created: 2025-01-11
 # Last Modified: 2025-01-11
 # Version: 2.0.5
@@ -34,7 +32,7 @@ from concurrent.futures import ThreadPoolExecutor
 import aiohttp 
 import logging
 import aiofiles
-from config import YT_COOKIES, INSTA_COOKIES
+from config import YT_COOKIES, INSTA_COOKIES, BOT_NAME
 from mutagen.id3 import ID3, TIT2, TPE1, COMM, APIC
 from mutagen.mp3 import MP3
  
@@ -89,7 +87,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
             temp_cookie_path = temp_cookie_file.name
  
     start_time = time.time()
-    random_filename = f"@team_spy_pro_{event.sender_id}"
+    random_filename = f"audio_{event.sender_id}_{int(time.time())}"
     download_path = f"{random_filename}.mp3"
  
     ydl_opts = {
@@ -120,8 +118,8 @@ async def process_audio(client, event, url, cookies_env_var=None):
                 except Exception:
                     pass
                 audio_file.tags["TIT2"] = TIT2(encoding=3, text=title)
-                audio_file.tags["TPE1"] = TPE1(encoding=3, text="Team SPY")
-                audio_file.tags["COMM"] = COMM(encoding=3, lang="eng", desc="Comment", text="Processed by Team SPY")
+                audio_file.tags["TPE1"] = TPE1(encoding=3, text=BOT_NAME)
+                audio_file.tags["COMM"] = COMM(encoding=3, lang="eng", desc="Comment", text=f"Processed by {BOT_NAME}")
  
                 thumbnail_url = info_dict.get('thumbnail')
                 if thumbnail_url:
@@ -149,7 +147,7 @@ async def process_audio(client, event, url, cookies_env_var=None):
                 name=None,
                 progress_bar_function=lambda done, total: progress_callback(done, total, chat_id)
             )
-            await client.send_file(chat_id, uploaded, caption=f"**{title}**\n\n**__Powered by Team SPY__**")
+            await client.send_file(chat_id, uploaded, caption=f"**{title}**\n\n**__Powered by {BOT_NAME}__**")
             if prog:
                 await prog.delete()
         else:
@@ -167,7 +165,6 @@ async def process_audio(client, event, url, cookies_env_var=None):
 @client.on(events.NewMessage(pattern="/adl"))
 async def handler(event):
     if not await is_private_chat(event):
-        await event.respond('This command can only be used in private chats for security reasons.')
         return
     user_id = event.sender_id
     if user_id in ongoing_downloads:
@@ -221,7 +218,6 @@ def download_video(url, ydl_opts):
 @client.on(events.NewMessage(pattern="/dl"))
 async def handler(event):
     if not await is_private_chat(event):
-        await event.respond('This command can only be used in private chats for security reasons.')
         return
     user_id = event.sender_id
  
@@ -309,7 +305,7 @@ def progress_callback(done, total, user_id):
         f"│ **__Speed:__** {speed_mbps:.2f} Mbps\n"
         f"│ **__Time Remaining:__** {remaining_time_min:.2f} min\n"
         f"╰──────────────────╯\n\n"
-        f"**__Powered by Team SPY__**"
+        f"**__Powered by {BOT_NAME}__**"
     )
  
      
@@ -360,7 +356,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
             return
          
         await asyncio.to_thread(download_video, url, ydl_opts)
-        title = info_dict.get('title', 'Powered by Team SPY')
+        title = info_dict.get('title', f'Powered by {BOT_NAME}')
         k = await get_video_metadata(download_path)      
         W = k['width']
         H = k['height']
@@ -383,6 +379,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         else:
             THUMB = await screenshot(download_path, metadata['duration'], event.sender_id)
 
+	
         chat_id = event.chat_id
         SIZE = 2 * 1024 * 1024
         caption = f"{title}"
@@ -430,31 +427,31 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         if thumbnail_file and os.path.exists(thumbnail_file):
             os.remove(thumbnail_file)
  
-
+ 
 async def split_and_upload_file(app, sender, file_path, caption):
     if not os.path.exists(file_path):
         await app.send_message(sender, "❌ File not found!")
         return
-
+ 
     file_size = os.path.getsize(file_path)
     start = await app.send_message(sender, f"ℹ️ File size: {file_size / (1024 * 1024):.2f} MB")
     PART_SIZE =  1.9 * 1024 * 1024 * 1024
-
+ 
     part_number = 0
     async with aiofiles.open(file_path, mode="rb") as f:
         while True:
             chunk = await f.read(PART_SIZE)
             if not chunk:
                 break
-
+ 
             # Create part filename
             base_name, file_ext = os.path.splitext(file_path)
             part_file = f"{base_name}.part{str(part_number).zfill(3)}{file_ext}"
-
+ 
             # Write part to file
             async with aiofiles.open(part_file, mode="wb") as part_f:
                 await part_f.write(chunk)
-
+ 
             # Uploading part
             edit = await app.send_message(sender, f"⬆️ Uploading part {part_number + 1}...")
             part_caption = f"{caption} \n\n**Part : {part_number + 1}**"
@@ -464,13 +461,13 @@ async def split_and_upload_file(app, sender, file_path, caption):
             )
             await edit.delete()
             os.remove(part_file)
-
+ 
             part_number += 1
-
+ 
     await start.delete()
     os.remove(file_path)
-
-
+ 
+ 
 PROGRESS_BAR = """
 │ **__Completed:__** {1}/{2}
 │ **__Bytes:__** {0}%
@@ -478,7 +475,7 @@ PROGRESS_BAR = """
 │ **__ETA:__** {4}
 ╰─────────────────────╯
 """
-
+ 
 async def get_seconds(time_string: str) -> int:
     """
     Converts a time string (e.g., '5min', '2hour') into seconds.
@@ -499,7 +496,7 @@ async def get_seconds(time_string: str) -> int:
     }
     
     return value * time_units.get(unit, 0)
-
+ 
 async def progress_bar(current: int, total: int, ud_type: str, message, start: float):
     """
     Updates the progress bar for an ongoing process.
@@ -513,10 +510,10 @@ async def progress_bar(current: int, total: int, ud_type: str, message, start: f
         elapsed_time = round(diff * 1000)
         time_to_completion = round((total - current) / speed) * 1000 if speed else 0
         estimated_total_time = elapsed_time + time_to_completion
-
+ 
         elapsed_time_str = TimeFormatter(elapsed_time)
         estimated_total_time_str = TimeFormatter(estimated_total_time)
-
+ 
         progress = "".join(["♦" for _ in range(math.floor(percentage / 10))]) + \
                    "".join(["◇" for _ in range(10 - math.floor(percentage / 10))])
         
@@ -531,7 +528,7 @@ async def progress_bar(current: int, total: int, ud_type: str, message, start: f
             await message.edit(text=f"{ud_type}\n│ {progress_text}")
         except:
             pass
-
+ 
 def humanbytes(size: int) -> str:
     """
     Converts bytes into a human-readable format.
@@ -547,7 +544,7 @@ def humanbytes(size: int) -> str:
         n += 1
     
     return f"{round(size, 2)} {units[n]}"
-
+ 
 def TimeFormatter(milliseconds: int) -> str:
     """
     Formats milliseconds into a human-readable duration.
@@ -565,7 +562,7 @@ def TimeFormatter(milliseconds: int) -> str:
     if milliseconds: parts.append(f"{milliseconds}ms")
     
     return ', '.join(parts)
-
+ 
 def convert(seconds: int) -> str:
     """
     Converts seconds into HH:MM:SS format.

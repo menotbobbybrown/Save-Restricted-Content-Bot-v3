@@ -1,10 +1,7 @@
 {
   "name": "Save Restricted Content Bot v3",
-  "description": "Save Restricted Content Bot by Team SPY",
-  "logo": "https://lh3.googleusercontent.com/-HPcn7AqepNg/AAAAAAAAAAI/AAAAAAAAAAA/ALKGfknb1BkQiq-8_KUVOYcNAJ4swKivDQ/photo.jpg",
+  "description": "Save Restricted Content Bot",
   "keywords": ["python3", "telegram", "MusicBot", "telegram-bot", "pyrogram"],
-  "repository": "https://github.com/devgaganin/save_restricted-content-telegram-bot-repo",
-  "success_url": "https://devgagan.in",
   "env": {
     "API_ID": {
       "description": "Get this value from https://my.telegram.org",
@@ -83,13 +80,28 @@
     },
     "ADMIN_CONTACT": {
       "description": "type admin contact link",
-      "value": "https://t.me/kingofpatal",
+      "value": "https://t.me/your_admin_username",
       "required": true
     },
     "JOIN_LINK": {
       "description": "type join channel link which comes on /start",
-      "value": "https://t.me/team_spy_pro",
+      "value": "https://t.me/your_channel_username",
       "required": true
+    },
+    "BOT_NAME": {
+      "description": "Name of your bot",
+      "value": "Save Restricted Bot",
+      "required": false
+    },
+    "OWNER_USERNAME": {
+      "description": "Username of the bot owner (without @)",
+      "value": "your_owner_username",
+      "required": false
+    },
+    "START_PIC": {
+      "description": "URL of the picture to show on /start",
+      "value": "https://graph.org/file/d44f024a08ded19452152.jpg",
+      "required": false
     }
   },
   "buildpacks": [

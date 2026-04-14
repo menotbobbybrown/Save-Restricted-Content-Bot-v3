@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.  
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.  
 # Licensed under the GNU General Public License v3.0.  
 # See LICENSE file in the repository root for full license text.
 
@@ -9,7 +9,7 @@ import asyncio
 import string
 import random
 from shared_client import client as gf
-from config import OWNER_ID
+from config import OWNER_ID, JOIN_LINK
 from utils.func import get_user_data_key, save_user_data, users_collection
 
 VIDEO_EXTENSIONS = {
@@ -49,7 +49,7 @@ async def send_settings_message(chat_id, user_id):
             Button.inline('❌ Remove Thumbnail', b'remthumb')
         ],
         [
-            Button.url('🆘 Report Errors', 'https://t.me/team_spy_pro')
+            Button.url('🆘 Report Errors', JOIN_LINK)
         ]
     ]
     await gf.send_message(chat_id, MESS, buttons=buttons)
@@ -139,7 +139,7 @@ async def start_conversation(event, user_id, conv_type, prompt_message):
 async def cancel_conversation(event):
     user_id = event.sender_id
     if user_id in active_conversations:
-        await event.respond('Cancelled enjoy baby...')
+        await event.respond('Cancelled successfully.')
         del active_conversations[user_id]
 
 @gf.on(events.NewMessage())

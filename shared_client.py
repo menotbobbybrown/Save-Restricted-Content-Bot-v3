@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.  
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.  
 # Licensed under the GNU General Public License v3.0.  
 # See LICENSE file in the repository root for full license text.
 
@@ -14,13 +14,13 @@ userbot = Client("4gbbot", api_id=API_ID, api_hash=API_HASH, session_string=STRI
 async def start_client():
     if not client.is_connected():
         await client.start(bot_token=BOT_TOKEN)
-        print("SpyLib started...")
+        print("Telethon bot started...")
     if STRING:
         try:
             await userbot.start()
             print("Userbot started...")
         except Exception as e:
-            print(f"Hey honey!! check your premium string session, it may be invalid of expire {e}")
+            print(f"Error starting userbot: {e}")
             sys.exit(1)
     await app.start()
     print("Pyro App Started...")

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.
 # Licensed under the GNU General Public License v3.0.
 # See LICENSE file in the repository root for full license text.
 
@@ -47,8 +47,11 @@ FREEMIUM_LIMIT = int(os.getenv("FREEMIUM_LIMIT", "0"))
 PREMIUM_LIMIT  = int(os.getenv("PREMIUM_LIMIT", "500"))
 
 # ─── UI / LINKS ─────────────────────────────────────────────────────────────────
-JOIN_LINK     = os.getenv("JOIN_LINK", "https://t.me/team_spy_pro")
+JOIN_LINK     = os.getenv("JOIN_LINK", "https://t.me/your_channel_username")
 ADMIN_CONTACT = os.getenv("ADMIN_CONTACT", "https://t.me/username_of_admin")
+BOT_NAME      = os.getenv("BOT_NAME", "Save Restricted Bot")
+OWNER_USERNAME = os.getenv("OWNER_USERNAME", "admin")
+START_PIC     = os.getenv("START_PIC", "https://graph.org/file/d44f024a08ded19452152.jpg")
 
 # ════════════════════════════════════════════════════════════════════════════════
 # ░ PREMIUM PLANS CONFIGURATION
@@ -76,5 +79,5 @@ P0 = {
 }
 
 # ════════════════════════════════════════════════════════════════════════════════
-# ░ DEVGAGAN
+# ░ CONTRIBUTOR
 # ════════════════════════════════════════════════════════════════════════════════

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.  
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.  
 # Licensed under the GNU General Public License v3.0.  
 # See LICENSE file in the repository root for full license text.
 
@@ -71,7 +71,7 @@ async def sp(c, m):
             f"🔖 Txn: `{p.telegram_payment_charge_id}`"
         )
         for o in OWNER_ID:
-            await c.send_message(f"User {u} just purchased the premium, txn id is {p.telegram_payment_charge_id}.")
+            await c.send_message(o, f"User {u} just purchased the premium, txn id is {p.telegram_payment_charge_id}.")
     else:
         await m.reply_text(
             f"⚠️ Paid but premium failed.\nTxn `{p.telegram_payment_charge_id}`"

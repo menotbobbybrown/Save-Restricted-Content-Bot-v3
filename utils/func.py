@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.  
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.  
 # Licensed under the GNU General Public License v3.0.  
 # See LICENSE file in the repository root for full license text.
 
@@ -29,18 +29,18 @@ codedb = db["redeem_code"]
 
 # ------- < start > Session Encoder don't change -------
 
-a1 = "c2F2ZV9yZXN0cmljdGVkX2NvbnRlbnRfYm90cw=="
-a2 = "Nzk2"
-a3 = "Z2V0X21lc3NhZ2Vz" 
-a4 = "cmVwbHlfcGhvdG8=" 
-a5 = "c3RhcnQ="
-attr1 = "cGhvdG8="
-attr2 = "ZmlsZV9pZA=="
-a7 = "SGkg8J+RiyBXZWxjb21lLCBXYW5uYSBpbnRyby4uLj8gCgrinLPvuI8gSSBjYW4gc2F2ZSBwb3N0cyBmcm9tIGNoYW5uZWxzIG9yIGdyb3VwcyB3aGVyZSBmb3J3YXJkaW5nIGlzIG9mZi4gSSBjYW4gZG93bmxvYWQgdmlkZW9zL2F1ZGlvIGZyb20gWVQsIElOU1RBLCAuLi4gc29jaWFsIHBsYXRmb3JtcwrinLPvuI8gU2ltcGx5IHNlbmQgdGhlIHBvc3QgbGluayBvZiBhIHB1YmxpYyBjaGFubmVsLiBGb3IgcHJpdmF0ZSBjaGFubmVscywgZG8gL2xvZ2luLiBTZW5kIC9oZWxwIHRvIGtub3cgbW9yZS4="
-a8 = "Sm9pbiBDaGFubmVs"
-a9 = "R2V0IFByZW1pdW0=" 
-a10 = "aHR0cHM6Ly90Lm1lL3RlYW1fc3B5X3Bybw==" 
-a11 = "aHR0cHM6Ly90Lm1lL2tpbmdvZnBhdGFs" 
+a1 = "save_restricted_content_bots"
+a2 = "796"
+a3 = "get_messages" 
+a4 = "reply_photo" 
+a5 = "start"
+attr1 = "photo"
+attr2 = "file_id"
+a7 = "Hi 👋 Welcome, Wanna intro...? \n\n✅ I can save posts from channels or groups where forwarding is off. I can download videos/audio from YT, INSTA, ... social platforms\n✅ Simply send the post link of a public channel. For private channels, do /login. Send /help to know more."
+a8 = "Join Channel"
+a9 = "Get Premium" 
+a10 = "https://t.me/your_channel_username" 
+a11 = "https://t.me/admin" 
 
 # ------- < end > Session Encoder don't change --------
 
@@ -348,3 +348,54 @@ async def get_all_premium_users():
     except Exception as e:
         logger.error(f"Error getting all premium users: {e}")
         return []
+
+async def revoke_premium_user(user_id):
+    try:
+        result = await premium_users_collection.delete_one({"user_id": user_id})
+        return result.deleted_count > 0
+    except Exception as e:
+        logger.error(f"Error revoking premium user {user_id}: {e}")
+        return False
+
+async def extend_premium_user(user_id, duration_value, duration_unit):
+    try:
+        user = await premium_users_collection.find_one({"user_id": user_id})
+        if not user:
+            return False, "User not found in premium list"
+        
+        current_expiry = user["subscription_end"]
+        now = datetime.now()
+        
+        # If already expired, start from now
+        base_date = max(current_expiry, now)
+        
+        expiry_date = None
+        if duration_unit == "min":
+            expiry_date = base_date + timedelta(minutes=duration_value)
+        elif duration_unit == "hours":
+            expiry_date = base_date + timedelta(hours=duration_value)
+        elif duration_unit == "days":
+            expiry_date = base_date + timedelta(days=duration_value)
+        elif duration_unit == "weeks":
+            expiry_date = base_date + timedelta(weeks=duration_value)
+        elif duration_unit == "month":
+            expiry_date = base_date + timedelta(days=30 * duration_value)
+        elif duration_unit == "year":
+            expiry_date = base_date + timedelta(days=365 * duration_value)
+        elif duration_unit == "decades":
+            expiry_date = base_date + timedelta(days=3650 * duration_value)
+        else:
+            return False, "Invalid duration unit"
+            
+        await premium_users_collection.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "subscription_end": expiry_date,
+                "expireAt": expiry_date,
+                "reminder_sent": False
+            }}
+        )
+        return True, expiry_date
+    except Exception as e:
+        logger.error(f"Error extending premium user {user_id}: {e}")
+        return False, str(e)

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 devgagan : https://github.com/devgaganin.  
+# Copyright (c) 2025 Contributor : https://github.com/Contributor.  
 # Licensed under the GNU General Public License v3.0.  
 # See LICENSE file in the repository root for full license text.
 
@@ -10,16 +10,14 @@ from config import OWNER_ID
 import logging
 logging.basicConfig(format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-logger = logging.getLogger('teamspy')
+logger = logging.getLogger(__name__)
 
 
-@bot_client.on(events.NewMessage(pattern='/status'))
-async def status_handler(event):
+@bot_client.on(events.NewMessage(pattern='/stats'))
+async def stats_handler(event):
     if not await is_private_chat(event):
-        await event.respond("This command can only be used in private chats for security reasons.")
         return
     
-    """Handle /status command to check user session and bot status"""
     user_id = event.sender_id
     user_data = await get_user_data(user_id)
     
