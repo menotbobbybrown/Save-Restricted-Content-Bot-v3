@@ -394,13 +394,12 @@ async def extend_premium_user(user_id, duration_value, duration_unit):
 async def get_expiring_users():
     try:
         now = datetime.now()
-        start_threshold = now + timedelta(hours=24)
-        end_threshold = now + timedelta(hours=25)
+        threshold = now + timedelta(hours=24)
         
         cursor = premium_users_collection.find({
             "subscription_end": {
-                "$gte": start_threshold,
-                "$lte": end_threshold
+                "$lte": threshold,
+                "$gt": now
             },
             "reminded_24h": {"$ne": True}
         })

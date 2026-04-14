@@ -6,7 +6,7 @@ from shared_client import app
 from pyrogram import filters
 from pyrogram.errors import UserNotParticipant
 from pyrogram.types import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup
-from config import LOG_GROUP, OWNER_ID, FORCE_SUB, ADMIN_CONTACT, JOIN_LINK, BOT_NAME, START_PIC
+from config import LOG_GROUP, OWNER_ID, FORCE_SUB, ADMIN_CONTACT, JOIN_LINK, BOT_NAME, START_PIC, SUPPORT_LINK, CHANNEL_LINK
 
 async def subscribe(app, message):
     if FORCE_SUB:
@@ -27,7 +27,7 @@ async def subscribe(app, message):
             await message.reply_text(f"Something Went Wrong. Contact admins... with following message {e}")
             return 1 
      
-@app.on_message(filters.command("set"))
+@app.on_message(filters.command("set") & filters.private)
 async def set(_, message):
     if message.from_user.id not in OWNER_ID:
         return
@@ -35,16 +35,22 @@ async def set(_, message):
     await app.set_bot_commands([
         BotCommand("start", "🚀 Start the bot"),
         BotCommand("batch", "🫠 Extract in bulk"),
-        BotCommand("login", "🔑 Get into the bot"),
-        BotCommand("logout", "🚪 Get out of the bot"),
+        BotCommand("single", "📥 Extract single post"),
+        BotCommand("login", "🔑 Get into the bot via phone"),
+        BotCommand("session", "🔑 Login via session string"),
+        BotCommand("logout", "🚪 Logout from the bot"),
+        BotCommand("setbot", "🤖 Set custom bot"),
+        BotCommand("rembot", "🗑️ Remove custom bot"),
         BotCommand("adl", "👻 Download audio"),
         BotCommand("dl", "💀 Download videos"),
-        BotCommand("myplan", "🗓️ Check your premium plan"),
-        BotCommand("plans", "📋 View available plans"),
-        BotCommand("paid", "💰 Payment instructions"),
-        BotCommand("settings", "⚙️ Personalize things"),
+        BotCommand("transfer", "♻️ Transfer premium"),
+        BotCommand("plan", "📋 Check premium plan"),
+        BotCommand("settings", "⚙️ Personalize settings"),
+        BotCommand("stats", "📊 Check bot stats"),
         BotCommand("help", "❓ Help menu"),
-        BotCommand("cancel", "🚫 Cancel process")
+        BotCommand("terms", "📜 Terms and conditions"),
+        BotCommand("cancel", "🚫 Cancel process"),
+        BotCommand("paid", "💰 Payment instructions")
     ])
  
     await message.reply("✅ Commands configured successfully!")
@@ -148,7 +154,7 @@ async def terms(client, message):
     buttons = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("📋 See Plans", callback_data="see_plan")],
-            [InlineKeyboardButton("💬 Contact Now", url=ADMIN_CONTACT)],
+            [InlineKeyboardButton("💬 Contact Now", url=SUPPORT_LINK)],
         ]
     )
     await message.reply_text(terms_text, reply_markup=buttons)
@@ -167,7 +173,7 @@ async def plan(client, message):
     buttons = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("📜 See Terms", callback_data="see_terms")],
-            [InlineKeyboardButton("💬 Contact Now", url=ADMIN_CONTACT)],
+            [InlineKeyboardButton("💬 Contact Now", url=SUPPORT_LINK)],
         ]
     )
     await message.reply_text(plan_text, reply_markup=buttons)
@@ -186,7 +192,7 @@ async def see_plan(client, callback_query):
     buttons = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("📜 See Terms", callback_data="see_terms")],
-            [InlineKeyboardButton("💬 Contact Now", url=ADMIN_CONTACT)],
+            [InlineKeyboardButton("💬 Contact Now", url=SUPPORT_LINK)],
         ]
     )
     await callback_query.message.edit_text(plan_text, reply_markup=buttons)
@@ -203,7 +209,7 @@ async def see_terms(client, callback_query):
     buttons = InlineKeyboardMarkup(
         [
             [InlineKeyboardButton("📋 See Plans", callback_data="see_plan")],
-            [InlineKeyboardButton("💬 Contact Now", url=ADMIN_CONTACT)],
+            [InlineKeyboardButton("💬 Contact Now", url=SUPPORT_LINK)],
         ]
     )
     await callback_query.message.edit_text(terms_text, reply_markup=buttons)

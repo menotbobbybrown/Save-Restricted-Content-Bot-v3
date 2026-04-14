@@ -4,14 +4,14 @@
 
 import os
 from flask import Flask, render_template
-from config import BOT_NAME, JOIN_LINK, OWNER_USERNAME
+from config import BOT_NAME, CHANNEL_LINK, OWNER_USERNAME
 
 app = Flask(__name__)
 
 @app.route("/")
 def welcome():
     # Render the welcome page with bot name and links
-    return render_template("welcome.html", bot_name=BOT_NAME, join_link=JOIN_LINK, owner_username=OWNER_USERNAME)
+    return render_template("welcome.html", bot_name=BOT_NAME, join_link=CHANNEL_LINK, owner_username=OWNER_USERNAME)
 
 if __name__ == "__main__":
     # Default to port 5000 if PORT is not set in the environment

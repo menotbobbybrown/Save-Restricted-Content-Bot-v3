@@ -20,6 +20,7 @@ model = f"{BOT_NAME} v3"
 STEP_PHONE = 1
 STEP_CODE = 2
 STEP_PASSWORD = 3
+STEP_SESSION = 4
 login_cache = {}
 
 @bot.on_message(filters.command('login') & filters.private)
@@ -32,6 +33,17 @@ async def login_command(client, message):
         """Please send your phone number with country code
 Example: `+12345678900`"""
         )
+    login_cache[user_id] = {'status_msg': status_msg}
+
+@bot.on_message(filters.command('session') & filters.private)
+async def session_command(client, message):
+    user_id = message.from_user.id
+    set_user_step(user_id, STEP_SESSION)
+    login_cache.pop(user_id, None)
+    await message.delete()
+    status_msg = await message.reply(
+        "Please send your Pyrogram V2 session string:"
+    )
     login_cache[user_id] = {'status_msg': status_msg}
     
     
@@ -94,9 +106,9 @@ async def rem_bot_token(C, m):
 
     
 @bot.on_message(login_in_progress & filters.text & filters.private & ~filters.command([
-    'start', 'batch', 'cancel', 'login', 'logout', 'stop', 'set', 'pay',
+    'start', 'batch', 'cancel', 'login', 'logout', 'stop', 'set', 'pay', 'session',
     'redeem', 'gencode', 'generate', 'keyinfo', 'encrypt', 'decrypt', 'keys', 'setbot', 'rembot',
-    'add', 'revoke', 'extend', 'status', 'myplan', 'plans', 'getall', 'paid']))
+    'add', 'revoke', 'rem', 'extend', 'status', 'myplan', 'plans', 'getall', 'paid']))
 async def handle_login_steps(client, message):
     user_id = message.from_user.id
     text = message.text.strip()
@@ -190,6 +202,18 @@ Please enter your password:"""
                 await edit_message_safely(status_msg,
                     f"""❌ Incorrect password: {str(e)}
 Please try again:""")
+        elif step == STEP_SESSION:
+            try:
+                await edit_message_safely(status_msg, '🔄 Verifying and saving session string...')
+                encrypted_session = ecs(text)
+                await save_user_session(user_id, encrypted_session)
+                await edit_message_safely(status_msg, "✅ Session string saved and logged in successfully!!")
+                set_user_step(user_id, None)
+                login_cache.pop(user_id, None)
+            except Exception as e:
+                await edit_message_safely(status_msg, f"❌ Error: {str(e)}")
+                set_user_step(user_id, None)
+                login_cache.pop(user_id, None)
     except Exception as e:
         logger.error(f'Error in login flow: {str(e)}')
         await edit_message_safely(status_msg,

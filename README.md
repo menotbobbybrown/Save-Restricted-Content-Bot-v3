@@ -31,12 +31,11 @@ A powerful Telegram bot designed to save restricted content from channels and gr
 | `BOT_TOKEN` | Your Telegram Bot Token | Required |
 | `MONGO_DB` | MongoDB Connection URI | Required |
 | `OWNER_ID` | space-separated list of Owner IDs | Required |
-| `BRAND_NAME` | Branding name for the bot | Premium Bot |
-| `BOT_NAME` | Name of the bot | Save Restricted Bot |
-| `OWNER_USERNAME`| Username of the admin | admin |
-| `SUPPORT_CHAT` | Link to support group | - |
-| `JOIN_LINK` | Link to your Telegram channel | - |
-| `ADMIN_CONTACT` | Link to contact admin | - |
+| `BRAND_NAME` | Branding name for the bot | ModelNorth |
+| `BOT_NAME` | Name of the bot | ModelNorth Bot |
+| `SUPPORT_LINK` | Link to support group | - |
+| `CHANNEL_LINK` | Link to your Telegram channel | - |
+| `OWNER_USERNAME`| Username of the admin | ModelNorthAdmin |
 | `START_PIC` | URL for the bot's start image | - |
 | `FORCE_SUB` | ID of channel for force subscription | - |
 | `LOG_GROUP` | ID of the log group | - |
@@ -81,6 +80,7 @@ A powerful Telegram bot designed to save restricted content from channels and gr
 
 ### Owner Commands (Restricted to OWNER_ID)
 - `/add <user_id> <value> <unit>`: Add premium subscription.
+- `/rem <user_id>`: Remove premium subscription (Alias for `/revoke`).
 - `/revoke <user_id>`: Remove premium subscription.
 - `/extend <user_id> <value> <unit>`: Extend existing subscription.
 - `/status <user_id>`: Check subscription status of any user.
@@ -90,15 +90,23 @@ A powerful Telegram bot designed to save restricted content from channels and gr
 ### User Commands (Private Only)
 - `/start`: Start the bot and see welcome message.
 - `/help`: Show help menu with feature details.
+- `/terms`: View terms and conditions.
+- `/plan`: Overview of premium features.
 - `/plans`: View available premium plans.
 - `/myplan`: Check your subscription details.
 - `/paid`: Instructions for purchasing premium.
-- `/login`: Log into private channels.
+- `/login`: Log into private channels via phone.
+- `/session`: Log into private channels via session string.
 - `/logout`: Logout from the bot.
+- `/setbot <token>`: Set a custom bot for extraction.
+- `/rembot`: Remove custom bot.
 - `/batch`: Start bulk extraction.
+- `/single <link>`: Process a single post.
 - `/dl <link>`: Download video from social media.
 - `/adl <link>`: Download audio from social media.
+- `/transfer <user_id>`: Transfer your premium to another user.
 - `/settings`: Personalize bot settings.
+- `/stats`: Check your personal status and bot info.
 - `/cancel`: Cancel ongoing process.
 
 ## ⚖️ License

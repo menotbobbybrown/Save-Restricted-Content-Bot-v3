@@ -9,7 +9,7 @@ import asyncio
 import string
 import random
 from shared_client import client as gf
-from config import OWNER_ID, JOIN_LINK
+from config import OWNER_ID, CHANNEL_LINK, SUPPORT_LINK
 from utils.func import get_user_data_key, save_user_data, users_collection
 
 VIDEO_EXTENSIONS = {
@@ -23,6 +23,8 @@ active_conversations = {}
 
 @gf.on(events.NewMessage(incoming=True, pattern='/settings'))
 async def settings_command(event):
+    if not event.is_private:
+        return
     user_id = event.sender_id
     await send_settings_message(event.chat_id, user_id)
 
@@ -49,7 +51,7 @@ async def send_settings_message(chat_id, user_id):
             Button.inline('❌ Remove Thumbnail', b'remthumb')
         ],
         [
-            Button.url('🆘 Report Errors', JOIN_LINK)
+            Button.url('🆘 Report Errors', SUPPORT_LINK)
         ]
     ]
     await gf.send_message(chat_id, MESS, buttons=buttons)
@@ -137,6 +139,8 @@ async def start_conversation(event, user_id, conv_type, prompt_message):
 
 @gf.on(events.NewMessage(pattern='/cancel'))
 async def cancel_conversation(event):
+    if not event.is_private:
+        return
     user_id = event.sender_id
     if user_id in active_conversations:
         await event.respond('Cancelled successfully.')

@@ -5,7 +5,7 @@
 from shared_client import client as bot_client, app
 from telethon import events
 from datetime import datetime, timedelta
-from config import OWNER_ID, PREMIUM_LOGS, P0, JOIN_LINK as JL, ADMIN_CONTACT as AC, OWNER_USERNAME, BOT_NAME, START_PIC, BRAND_NAME
+from config import OWNER_ID, PREMIUM_LOGS, P0, CHANNEL_LINK as JL, SUPPORT_LINK as AC, OWNER_USERNAME, BOT_NAME, START_PIC, BRAND_NAME
 from utils.func import (
     add_premium_user, 
     is_private_chat, 
@@ -74,7 +74,7 @@ async def add_premium_handler(event):
         await event.respond(f'Error: {str(e)}')
 
 
-@bot_client.on(events.NewMessage(pattern='/revoke'))
+@bot_client.on(events.NewMessage(pattern='/revoke|/rem'))
 async def revoke_premium_handler(event):
     if not await is_private_chat(event):
         return

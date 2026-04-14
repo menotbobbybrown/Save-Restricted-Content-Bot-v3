@@ -389,7 +389,7 @@ async def process_msg(c, u, m, d, lt, uid, i):
     except Exception as e:
         return f'Error: {str(e)[:50]}'
         
-@X.on_message(filters.command(['batch', 'single']))
+@X.on_message(filters.command(['batch', 'single']) & filters.private)
 async def process_cmd(c, m):
     uid = m.from_user.id
     cmd = m.command[0]
@@ -413,7 +413,7 @@ async def process_cmd(c, m):
     Z[uid] = {'step': 'start' if cmd == 'batch' else 'start_single'}
     await pro.edit(f'Send {"start link..." if cmd == "batch" else "link you to process"}.')
 
-@X.on_message(filters.command(['cancel', 'stop']))
+@X.on_message(filters.command(['cancel', 'stop']) & filters.private)
 async def cancel_cmd(c, m):
     uid = m.from_user.id
     if is_user_active(uid):

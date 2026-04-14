@@ -3,7 +3,7 @@
 
 import logging
 from datetime import timedelta
-from config import RENEWAL_REMINDER, ADMIN_CONTACT
+from config import RENEWAL_REMINDER, SUPPORT_LINK
 from utils.func import get_expiring_users, set_user_reminded
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ async def renewal_reminder_job(bot):
             f"Your premium subscription is expiring soon (in about 24 hours)!\n"
             f"**Expiry Time**: {formatted_expiry} (IST)\n\n"
             f"To continue using premium features without interruption, please renew your subscription.\n"
-            f"Contact: {ADMIN_CONTACT}"
+            f"Contact: {SUPPORT_LINK}"
         )
         
         try:

@@ -47,18 +47,19 @@ FREEMIUM_LIMIT = int(os.getenv("FREEMIUM_LIMIT", "0"))
 PREMIUM_LIMIT  = int(os.getenv("PREMIUM_LIMIT", "500"))
 
 # ─── UI / LINKS ─────────────────────────────────────────────────────────────────
-JOIN_LINK     = os.getenv("JOIN_LINK", "https://t.me/your_channel_username")
-ADMIN_CONTACT = os.getenv("ADMIN_CONTACT", "https://t.me/username_of_admin")
-BOT_NAME      = os.getenv("BOT_NAME", "Save Restricted Bot")
-OWNER_USERNAME = os.getenv("OWNER_USERNAME", "admin")
+JOIN_LINK     = os.getenv("JOIN_LINK", "https://t.me/ModelNorth")
+ADMIN_CONTACT = os.getenv("ADMIN_CONTACT", "https://t.me/ModelNorthSupport")
+BOT_NAME      = os.getenv("BOT_NAME", "ModelNorth Bot")
+OWNER_USERNAME = os.getenv("OWNER_USERNAME", "ModelNorthAdmin")
 START_PIC     = os.getenv("START_PIC", "https://graph.org/file/d44f024a08ded19452152.jpg")
 
 # ─── BRANDING SETTINGS ──────────────────────────────────────────────────────────
-BRAND_NAME    = os.getenv("BRAND_NAME", "Premium Bot")
-SUPPORT_CHAT  = os.getenv("SUPPORT_CHAT", "https://t.me/your_support_group")
-CHANNEL_LINK  = os.getenv("CHANNEL_LINK", "https://t.me/your_channel_username")
-GROUP_LINK    = os.getenv("GROUP_LINK", "https://t.me/your_support_group")
-BOT_STATS_NAME = os.getenv("BOT_STATS_NAME", "PremiumBotStats")
+BRAND_NAME    = os.getenv("BRAND_NAME", "ModelNorth")
+SUPPORT_LINK  = os.getenv("SUPPORT_LINK", "https://t.me/ModelNorthSupport")
+SUPPORT_CHAT  = os.getenv("SUPPORT_CHAT", SUPPORT_LINK)
+CHANNEL_LINK  = os.getenv("CHANNEL_LINK", "https://t.me/ModelNorth")
+GROUP_LINK    = os.getenv("GROUP_LINK", SUPPORT_LINK)
+BOT_STATS_NAME = os.getenv("BOT_STATS_NAME", "ModelNorthStats")
 
 # ════════════════════════════════════════════════════════════════════════════════
 # ░ PREMIUM PLANS CONFIGURATION

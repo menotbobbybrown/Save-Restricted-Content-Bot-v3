@@ -32,7 +32,8 @@ from concurrent.futures import ThreadPoolExecutor
 import aiohttp 
 import logging
 import aiofiles
-from config import YT_COOKIES, INSTA_COOKIES, BOT_NAME
+from config import YT_COOKIES, INSTA_COOKIES, BOT_NAME, FREEMIUM_LIMIT
+from utils.func import get_video_metadata, screenshot, is_private_chat, is_premium_user
 from mutagen.id3 import ID3, TIT2, TPE1, COMM, APIC
 from mutagen.mp3 import MP3
  
@@ -163,10 +164,14 @@ async def process_audio(client, event, url, cookies_env_var=None):
             os.remove(temp_cookie_path)
  
 @client.on(events.NewMessage(pattern="/adl"))
-async def handler(event):
+async def adl_handler(event):
     if not await is_private_chat(event):
         return
     user_id = event.sender_id
+
+    if FREEMIUM_LIMIT == 0 and not await is_premium_user(user_id):
+        await event.reply("This bot does not provide free services. Please get a subscription from the OWNER.")
+        return
     if user_id in ongoing_downloads:
         await event.reply("**You already have an ongoing download. Please wait until it completes!**")
         return
@@ -216,10 +221,14 @@ def download_video(url, ydl_opts):
  
  
 @client.on(events.NewMessage(pattern="/dl"))
-async def handler(event):
+async def dl_handler(event):
     if not await is_private_chat(event):
         return
     user_id = event.sender_id
+
+    if FREEMIUM_LIMIT == 0 and not await is_premium_user(user_id):
+        await event.reply("This bot does not provide free services. Please get a subscription from the OWNER.")
+        return
  
      
     if user_id in ongoing_downloads:
@@ -379,7 +388,7 @@ async def process_video(client, event, url, cookies_env_var, check_duration_and_
         else:
             THUMB = await screenshot(download_path, metadata['duration'], event.sender_id)
 
-	
+    
         chat_id = event.chat_id
         SIZE = 2 * 1024 * 1024
         caption = f"{title}"
