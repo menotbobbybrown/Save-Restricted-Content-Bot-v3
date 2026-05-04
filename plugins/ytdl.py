@@ -27,7 +27,7 @@ from telethon.sync import TelegramClient
 from telethon.tl.types import DocumentAttributeVideo
 from utils.func import get_video_metadata, screenshot, is_private_chat
 from telethon.tl.functions.messages import EditMessageRequest
-from devgagantools import fast_upload
+from exztools import fast_upload
 from concurrent.futures import ThreadPoolExecutor
 import aiohttp 
 import logging

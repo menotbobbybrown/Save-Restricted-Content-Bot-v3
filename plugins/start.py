@@ -74,7 +74,8 @@ async def set(_, message):
         BotCommand("help", "❓ Help menu"),
         BotCommand("terms", "📜 Terms and conditions"),
         BotCommand("cancel", "🚫 Cancel process"),
-        BotCommand("paid", "💰 Payment instructions")
+        BotCommand("paid", "💰 Payment instructions"),
+        BotCommand("premium", "💎 Premium features & plans")
     ])
  
     await message.reply("✅ Commands configured successfully!")
@@ -97,18 +98,20 @@ help_pages = [
         "> View available premium plans\n\n"
         "7. **/paid**\n"
         "> Payment instructions\n\n"
-        "8. **/settings**\n"
-        "> Personalize your bot experience\n\n"
+        "8. **/premium**\n"
+        "> Premium features, plans & payment details\n\n"
     ),
     (
         "📝 **Bot Commands Overview (2/2)**:\n\n"
-        "9. **/logout**\n"
+        "9. **/settings**\n"
+        "> Personalize your bot experience\n\n"
+        "10. **/logout**\n"
         "> Logout from the bot\n\n"
-        "10. **/stats**\n"
+        "11. **/stats**\n"
         "> Get bot stats\n\n"
-        "11. **/cancel**\n"
+        "12. **/cancel**\n"
         "> Cancel ongoing batch process\n\n"
-        "12. **/settings** details:\n"
+        "13. **/settings** details:\n"
         "> - SETCHATID : To directly upload in channel or group\n"
         "> - SETRENAME : To add custom rename tag\n"
         "> - CAPTION : To add custom caption\n"

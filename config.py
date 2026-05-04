@@ -35,8 +35,17 @@ RENEWAL_REMINDER = os.getenv("RENEWAL_REMINDER", "True").lower() == "true"
 FORCE_SUB    = int(os.getenv("FORCE_SUB", "-10012345567"))
 
 # ─── SECURITY KEYS ──────────────────────────────────────────────────────────────
-MASTER_KEY   = os.getenv("MASTER_KEY", "gK8HzLfT9QpViJcYeB5wRa3DmN7P2xUq")  # session encryption
-IV_KEY       = os.getenv("IV_KEY", "s7Yx5CpVmE3F")  # decryption key
+MASTER_KEY   = os.getenv("MASTER_KEY")
+IV_KEY       = os.getenv("IV_KEY")
+
+if not MASTER_KEY:
+    raise RuntimeError("MASTER_KEY environment variable is required but not set")
+if not IV_KEY:
+    raise RuntimeError("IV_KEY environment variable is required but not set")
+
+# ─── PAYMENT DETAILS ───────────────────────────────────────────────────────────
+BANK_DETAILS   = os.getenv("BANK_DETAILS", "")
+CRYPTO_ADDRESS = os.getenv("CRYPTO_ADDRESS", "")
 
 # ─── COOKIES HANDLING ───────────────────────────────────────────────────────────
 YT_COOKIES   = os.getenv("YT_COOKIES", YTUB_COOKIES)

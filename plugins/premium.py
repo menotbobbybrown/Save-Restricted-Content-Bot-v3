@@ -5,7 +5,8 @@
 from shared_client import client as bot_client, app
 from telethon import events
 from datetime import datetime, timedelta
-from config import OWNER_ID, PREMIUM_LOGS, P0, CHANNEL_LINK as JL, SUPPORT_LINK as AC, OWNER_USERNAME, BOT_NAME, START_PIC, BRAND_NAME
+from config import OWNER_ID, PREMIUM_LOGS, P0, CHANNEL_LINK as JL, SUPPORT_LINK as AC, OWNER_USERNAME, BOT_NAME, START_PIC, BRAND_NAME, BANK_DETAILS, CRYPTO_ADDRESS, ADMIN_CONTACT
+import pytz
 from utils.func import (
     add_premium_user, 
     is_private_chat, 
@@ -18,7 +19,7 @@ from utils.func import (
     extend_premium_user
 )
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton as IK, InlineKeyboardMarkup as IKM
+from pyrogram.types import InlineKeyboardButton as IK, InlineKeyboardMarkup as IKM, BotCommand
 from plugins.start import subscribe
 
 
@@ -245,11 +246,35 @@ async def plans_handler(event):
     await event.respond(plan_text, link_preview=False)
 
 
-@bot_client.on(events.NewMessage(pattern='/paid'))
+@bot_client.on(events.NewMessage(pattern='/paid"))
 async def paid_handler(event):
     if not await is_private_chat(event):
         return
-        
+    
+    user_id = event.sender_id
+    sender = await event.get_sender()
+    
+    user_id_str = str(user_id)
+    username = f"@{sender.username}" if sender.username else "Not set"
+    name = sender.first_name + (f" {sender.last_name}" if sender.last_name else "")
+    
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time_ist = datetime.now(ist).strftime('%d-%b-%Y %I:%M:%S %p IST')
+    
+    alert_message = (
+        f"📢 **New Payment Alert!**\n\n"
+        f"**User ID:** `{user_id_str}`\n"
+        f"**Username:** {username}\n"
+        f"**Name:** {name}\n"
+        f"**Time:** {current_time_ist}"
+    )
+    
+    for owner in OWNER_ID:
+        try:
+            await bot_client.send_message(owner, alert_message)
+        except Exception:
+            pass
+    
     paid_text = (
         "✨ **How to Pay?**\n\n"
         "You can purchase premium by contacting the admin directly or using the payment command if available.\n\n"
@@ -259,6 +284,73 @@ async def paid_handler(event):
     )
     
     await event.respond(paid_text, link_preview=False)
+
+
+@bot_client.on(events.NewMessage(pattern='/premium'))
+async def premium_handler(event):
+    if not await is_private_chat(event):
+        return
+    
+    features_text = (
+        "💎 **Premium Features:**\n\n"
+        "✨ Unlimited downloads\n"
+        "✨ Access to bulk extraction\n"
+        "✨ Priority processing\n"
+        "✨ No restrictions on file sizes\n"
+        "✨ Extended batch processing\n"
+        "✨ Custom rename tags\n"
+        "✨ Custom captions"
+    )
+    
+    plans_text = "📋 **Available Plans:**\n\n"
+    for plan_id, details in P0.items():
+        plans_text += f"▪️ **{details['l']} Plan**\n"
+        plans_text += f"  - Duration: {details['du']} {details['u']}\n"
+        plans_text += f"  - Price: {details['s']} units\n\n"
+    
+    payment_text = ""
+    if BANK_DETAILS:
+        payment_text += f"🏦 **Bank Details:**\n{BANK_DETAILS}\n\n"
+    if CRYPTO_ADDRESS:
+        payment_text += f"₿ **Crypto Address:**\n{CRYPTO_ADDRESS}\n\n"
+    
+    buttons = InlineKeyboardMarkup([
+        [IK("💬 Contact Admin", url=ADMIN_CONTACT)],
+        [IK("✅ I've Paid", callback_data="ive_paid")]
+    ])
+    
+    full_message = f"{features_text}\n{plans_text}\n{payment_text}**Contact the admin for payment instructions.**"
+    
+    await event.respond(full_message, reply_markup=buttons, link_preview=False)
+
+
+@bot_client.on(events.CallbackQuery(data=b'ive_paid'))
+async def ive_paid_callback(event):
+    user_id = event.sender_id
+    sender = await event.get_sender()
+    
+    user_id_str = str(user_id)
+    username = f"@{sender.username}" if sender.username else "Not set"
+    name = sender.first_name + (f" {sender.last_name}" if sender.last_name else "")
+    
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time_ist = datetime.now(ist).strftime('%d-%b-%Y %I:%M:%S %p IST')
+    
+    alert_message = (
+        f"📢 **New Payment Alert!**\n\n"
+        f"**User ID:** `{user_id_str}`\n"
+        f"**Username:** {username}\n"
+        f"**Name:** {name}\n"
+        f"**Time:** {current_time_ist}"
+    )
+    
+    for owner in OWNER_ID:
+        try:
+            await bot_client.send_message(owner, alert_message)
+        except Exception:
+            pass
+    
+    await event.answer("✅ Your payment notification has been sent to the admin!", alert=True)
 
 
 @bot_client.on(events.NewMessage(pattern='/getall'))
