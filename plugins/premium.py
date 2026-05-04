@@ -246,7 +246,7 @@ async def plans_handler(event):
     await event.respond(plan_text, link_preview=False)
 
 
-@bot_client.on(events.NewMessage(pattern='/paid"))
+@bot_client.on(events.NewMessage(pattern='/paid'))
 async def paid_handler(event):
     if not await is_private_chat(event):
         return
